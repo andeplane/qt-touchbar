@@ -10,15 +10,16 @@ class TouchBarButton : public QQuickItem
 
 public:
     TouchBarButton();
+    ~TouchBarButton();
     QString title() const;
-    void* block() { return m_block; }
+    void* onPressedBlock() { return m_onPressedBlock; }
 signals:
     void titleChanged(QString title);
     void pressed();
 public slots:
     void setTitle(QString title);
 private:
-    void *m_block;
+    void *m_onPressedBlock;
 };
 
 #endif // TOUCHBARBUTTON_H

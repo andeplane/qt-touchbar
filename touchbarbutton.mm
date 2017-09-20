@@ -3,7 +3,11 @@
 
 TouchBarButton::TouchBarButton()
 {
-    m_block = [^{ emit pressed(); } copy];// Don't forget to -release.
+    m_onPressedBlock = [^{ emit pressed(); } copy];
+}
+
+TouchBarButton::~TouchBarButton() {
+    [(id)m_onPressedBlock release];
 }
 
 QString TouchBarButton::title() const

@@ -88,6 +88,11 @@ TouchBar::TouchBar(QQuickItem *parent) : QQuickItem(parent)
 
 void TouchBar::itemChange(ItemChange, const ItemChangeData &)
 {
+    // When children are updated in QML, loop through all of them,
+    // dynamic cast to known supported TouchBarItems and create identifier and
+    // NSTouchBarItem before updating the touchbar delegate.
+
+    // TODO: use other function to see when QML children are updated?
     NSMutableDictionary *items = [NSMutableDictionary dictionary];
 
     int i = 0;
@@ -96,11 +101,11 @@ void TouchBar::itemChange(ItemChange, const ItemChangeData &)
             NSString *identifier = [NSString stringWithFormat:@"com.myapp.%d", i++];
             // This is a button
             TouchBarButton *button = dynamic_cast<TouchBarButton*>(child);
-            NSCustomTouchBarItem *touchBarItem1 = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
-            NSButton *touchBarButton1 = [[NSButton buttonWithTitle:button->title().toNSString() target:(id)button->block()
+            NSCustomTouchBarItem *touchBarItem = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            NSButton *touchBarButton = [[NSButton buttonWithTitle:button->title().toNSString() target:(id)button->onPressedBlock()
                                               action:@selector(invoke)] autorelease];
-            touchBarItem1.view =  touchBarButton1;
-            [items setObject:touchBarItem1 forKey:identifier];
+            touchBarItem.view =  touchBarButton;
+            [items setObject:touchBarItem forKey:identifier];
         }
     }
     TouchBarProvider *tbp = static_cast<TouchBarProvider*>(m_tbProvider);
