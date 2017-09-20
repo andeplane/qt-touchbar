@@ -15,18 +15,21 @@ public:
     TouchBarButton();
     ~TouchBarButton();
 #ifdef __OBJC__
-    NSButton *toNSItem();
+    NSButton *getNSButton();
+    id onPressedBlock();
 #endif
 
     QString title() const;
-    void* onPressedBlock() { return m_onPressedBlock; }
 signals:
     void titleChanged(QString title);
     void pressed();
 public slots:
     void setTitle(QString title);
 private:
-    void *m_onPressedBlock;
+#ifdef __OBJC__
+    id m_onPressedBlock;
+    NSButton *m_button;
+#endif
 };
 
 #endif // TOUCHBARBUTTON_H

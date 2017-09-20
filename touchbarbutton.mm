@@ -3,18 +3,26 @@
 
 TouchBarButton::TouchBarButton()
 {
+    m_button = nil;
     m_onPressedBlock = [^{ emit pressed(); } copy];
 }
 
 TouchBarButton::~TouchBarButton() {
     [(id)m_onPressedBlock release];
+    if(m_button)
+        [m_button release];
 }
 
-NSButton *TouchBarButton::toNSItem()
+id TouchBarButton::onPressedBlock()
 {
-    NSButton *touchBarButton = [[NSButton buttonWithTitle:title().toNSString() target:(id)m_onPressedBlock
-                                      action:@selector(invoke)] autorelease];
-    return touchBarButton;
+     return m_onPressedBlock;
+}
+
+NSButton *TouchBarButton::getNSButton()
+{
+    m_button = [[NSButton buttonWithTitle:title().toNSString() target:(id)m_onPressedBlock
+      action:@selector(invoke)] autorelease]; // TODO: memory issues since we haven't increased retain count
+    return m_button;
 }
 
 QString TouchBarButton::title() const
@@ -28,5 +36,9 @@ void TouchBarButton::setTitle(QString title)
         return;
 
     m_title = title;
+    if(m_button) {
+        [m_button setTitle:m_title.toNSString()];
+    }
+
     emit titleChanged(m_title);
 }

@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QtCore>
 #include "touchbarbutton.h"
+#include "touchbarslider.h"
 
 using namespace std;
 
@@ -97,13 +98,23 @@ void TouchBar::itemChange(ItemChange, const ItemChangeData &)
 
     int i = 0;
     for(QObject *child : children()) {
+        NSString *identifier = [NSString stringWithFormat:@"com.myapp.%d", i++];
         if(dynamic_cast<TouchBarButton*>(child)) {
-            NSString *identifier = [NSString stringWithFormat:@"com.myapp.%d", i++];
             // This is a button
             TouchBarButton *button = dynamic_cast<TouchBarButton*>(child);
-            NSCustomTouchBarItem *touchBarItem = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
-            touchBarItem.view =  button->toNSItem();
-            [items setObject:touchBarItem forKey:identifier];
+            NSCustomTouchBarItem *item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            item.view =  button->getNSButton();
+            [items setObject:item forKey:identifier];
+        } else if(dynamic_cast<TouchBarSlider*>(child)) {
+            // This is a slider
+            TouchBarSlider *slider = dynamic_cast<TouchBarSlider*>(child);
+            NSSliderTouchBarItem *item = [[NSSliderTouchBarItem alloc] initWithIdentifier:identifier];
+
+            item.slider =  slider->getNSSlider();
+            item.label = slider->label().toNSString();
+            [item setTarget:slider->onMovedBlock()];
+            [item setAction:@selector(invoke)];
+            [items setObject:item forKey:identifier];
         }
     }
     TouchBarProvider *tbp = static_cast<TouchBarProvider*>(m_tbProvider);

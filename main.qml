@@ -19,5 +19,19 @@ QQC1.ApplicationWindow {
             title: "MyButton 2"
             onPressed: console.log("Did press this other button")
         }
+        TouchBarSlider {
+            id: tbSlider
+            label: "MySlider"
+            from: 1
+            to: 10
+            value: slider.value
+        }
+    }
+
+    Slider {
+        id: slider
+        from: tbSlider.from
+        to: tbSlider.to
+        value: tbSlider.value
     }
 }

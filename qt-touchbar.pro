@@ -12,7 +12,11 @@ OBJECTIVE_SOURCES += \
 
 HEADERS += \
     touchbar.h \
-    touchbarbutton.h
+    touchbarbutton.h \
+    touchbarslider.h
 
 LIBS += -framework AppKit
 RESOURCES += qml.qrc
+
+SOURCES += \
+    touchbarslider.mm
