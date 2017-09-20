@@ -1,5 +1,5 @@
 #include "touchbarbutton.h"
-#import <AppKit/AppKit.h>
+// #import <AppKit/AppKit.h>
 
 TouchBarButton::TouchBarButton()
 {
@@ -8,6 +8,13 @@ TouchBarButton::TouchBarButton()
 
 TouchBarButton::~TouchBarButton() {
     [(id)m_onPressedBlock release];
+}
+
+NSButton *TouchBarButton::toNSItem()
+{
+    NSButton *touchBarButton = [[NSButton buttonWithTitle:title().toNSString() target:(id)m_onPressedBlock
+                                      action:@selector(invoke)] autorelease];
+    return touchBarButton;
 }
 
 QString TouchBarButton::title() const

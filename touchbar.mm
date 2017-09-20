@@ -102,9 +102,7 @@ void TouchBar::itemChange(ItemChange, const ItemChangeData &)
             // This is a button
             TouchBarButton *button = dynamic_cast<TouchBarButton*>(child);
             NSCustomTouchBarItem *touchBarItem = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
-            NSButton *touchBarButton = [[NSButton buttonWithTitle:button->title().toNSString() target:(id)button->onPressedBlock()
-                                              action:@selector(invoke)] autorelease];
-            touchBarItem.view =  touchBarButton;
+            touchBarItem.view =  button->toNSItem();
             [items setObject:touchBarItem forKey:identifier];
         }
     }

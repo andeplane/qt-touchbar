@@ -1,7 +1,10 @@
 #ifndef TOUCHBARBUTTON_H
 #define TOUCHBARBUTTON_H
-
 #include <QQuickItem>
+#ifdef __OBJC__
+#import <AppKit/NSButton.h>
+#endif
+
 class TouchBarButton : public QQuickItem
 {
     Q_OBJECT
@@ -11,6 +14,10 @@ class TouchBarButton : public QQuickItem
 public:
     TouchBarButton();
     ~TouchBarButton();
+#ifdef __OBJC__
+    NSButton *toNSItem();
+#endif
+
     QString title() const;
     void* onPressedBlock() { return m_onPressedBlock; }
 signals:
